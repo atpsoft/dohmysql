@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+require 'doh/app/pwd'
+require 'doh/options'
+require 'doh/mysql/database_creator'
+
+opts = Doh::Options.new(
+{'drop_first' => [false, "-z", "--drop_first", "if true, will drop the database or tables before creating"] \
+,'database' => [Doh::config['primary_database'], "-d", "--database <database>", "name of the source database -- defaults to config['primary_database'], currently '#{Doh::config['primary_database']}'"] \
+,'all' => [false, "-a", "--all", "create all databases"] \
+,'target' => [Doh::config['target_database'], "-g", "--target <database>", "name of the target database -- defaults to same as source"] \
+,'tables' => [nil, "-t", "--tables <tables>", "comma-delimited list of tables to create; if specified, no databases are dropped or created"]
+})
+
+if opts.database.to_s.empty? && !opts.all
+  puts "You must specify a database (either here with -d or in your config) or all (with -a)"
+  exit 1
+end
+
+db_creator = DohDb::DatabaseCreator.new
+if opts.tables
+  db_creator.create_tables(opts.database, opts.drop_first, opts.tables.split(/,/))
+elsif opts.all
+  db_creator.create_all_databases(opts.drop_first)
+elsif opts.target
+  db_creator.create_database_copy(opts.target, opts.database, opts.drop_first)
+else
+  db_creator.create_database(opts.database, opts.drop_first)
+end
