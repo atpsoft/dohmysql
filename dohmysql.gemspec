@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.homepage = 'https://github.com/atpsoft/dohmysql'
   s.license = 'MIT'
-  s.email = ['devinfo@atpsoft.com']]
+  s.email = ['devinfo@atpsoft.com']
   s.extra_rdoc_files = ['MIT-LICENSE']
   s.test_files = FileList["{test}/**/*.rb"].to_a
   s.executables = FileList["{bin}/**/*"].to_a.collect { |elem| elem.slice(4..-1) }
