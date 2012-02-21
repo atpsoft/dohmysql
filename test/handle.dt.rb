@@ -52,59 +52,13 @@ class Test_Handle < DohTest::TestGroup
     assert_equal([['some_name']], DohDb::select_values("SELECT field FROM #{tbl}"))
   end
 
-  def test_multi_select
-    dbh = DohDb::request_handle
-    tbl = "doh_mysql_handle_multi_select_test"
-    DohDb::query("CREATE TEMPORARY TABLE #{tbl} (value CHAR(30))")
-    DohDb::query("INSERT INTO #{tbl} SET value = 'first'")
-    DohDb::query("INSERT INTO #{tbl} SET value = 'second'")
-
-    stmts = []
-    stmts.push("SELECT * FROM #{tbl}")
-    stmts.push("INSERT INTO #{tbl} SET value = 'third'")
-    stmts.push(["SELECT * FROM #{tbl}", :hash])
-    stmts.push("SELECT * FROM #{tbl}")
-    stmts.push("INSERT INTO #{tbl} SET value = 'fourth'")
-    stmts.push(["SELECT * FROM #{tbl}", :smart])
-    select_results = DohDb::multi_select(stmts)
-    assert_equal(4, select_results.size)
-    assert_equal(4, DohDb::select_field("SELECT COUNT(*) FROM #{tbl}"))
-
-    curr_select = select_results[0]
-    assert_equal(2, curr_select.size)
-    assert_instance_of(ReadOnlyRow, curr_select[0])
-    assert_equal({'value' => 'first'}, curr_select[0].to_h)
-    assert_equal({'value' => 'second'}, curr_select[1].to_h)
-
-    curr_select = select_results[1]
-    assert_equal(3, curr_select.size)
-    assert_instance_of(Hash, curr_select[0])
-    assert_equal({'value' => 'first'}, curr_select[0].to_h)
-    assert_equal({'value' => 'second'}, curr_select[1].to_h)
-    assert_equal({'value' => 'third'}, curr_select[2].to_h)
-
-    curr_select = select_results[2]
-    assert_equal(3, curr_select.size)
-    assert_equal({'value' => 'first'}, curr_select[0].to_h)
-    assert_equal({'value' => 'second'}, curr_select[1].to_h)
-    assert_equal({'value' => 'third'}, curr_select[2].to_h)
-
-    curr_select = select_results[3]
-    assert_equal(4, curr_select.size)
-    assert_instance_of(SmartRow, curr_select[0])
-    assert_equal({'value' => 'first'}, curr_select[0].to_h)
-    assert_equal({'value' => 'second'}, curr_select[1].to_h)
-    assert_equal({'value' => 'third'}, curr_select[2].to_h)
-    assert_equal({'value' => 'fourth'}, curr_select[3].to_h)
-  end
-
   def test_insert_hash
     dbh = DohDb::request_handle
     tbl = "doh_mysql_insert_hash_test"
     dbh.query("CREATE TEMPORARY TABLE #{tbl} (value INT KEY)")
     hash1 = {'value' => 1}
     assert_equal(0, dbh.insert_hash(hash1, tbl))
-    assert_raises(Mysql::Error) { dbh.insert_hash(hash1, tbl) }
+    assert_raises(Mysql2::Error) { dbh.insert_hash(hash1, tbl) }
     assert_equal(0, dbh.insert_hash(hash1, tbl, true))
   end
 end

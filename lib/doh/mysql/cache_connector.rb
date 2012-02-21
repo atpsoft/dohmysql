@@ -1,3 +1,4 @@
+require 'mysql2'
 require 'doh/mysql/handle'
 require 'doh/mysql/typed_row_builder'
 
@@ -41,8 +42,7 @@ private
     database ||= @database
     dbmsg = database.to_s.strip.empty? ? 'no default database' : "database #{database}"
     dohlog.info("connecting to #@host port #@port as username #@username, #{dbmsg}")
-    mysqlh = Mysql.connect(@host, @username, @password, database, @port, nil, Mysql::CLIENT_MULTI_STATEMENTS)
-    mysqlh.query_with_result = false
+    mysqlh = Mysql2::Client.new(:host => @host, :username => @username, :password => @password, :database => database, :port => @port)
     Handle.new(mysqlh, @row_builder)
   end
 

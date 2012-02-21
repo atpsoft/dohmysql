@@ -53,7 +53,7 @@ class Handle
 
   def insert(statement)
     generic_query(statement)
-    retval = @mysqlh.insert_id
+    retval = @mysqlh.last_id
     dohlog.info("insert_id was #{retval}")
     retval
   end
@@ -71,9 +71,8 @@ class Handle
   # It calls to_s on the statement object to facilitate the use of sql builder objects.
   def select(statement, row_builder = nil)
     result_set = generic_query(statement)
-    dohlog.info("selected #{result_set.num_rows} rows")
+    dohlog.info("selected #{result_set.size} rows")
     rows = get_row_builder(row_builder).build_rows(result_set)
-    result_set.free
     rows
   end
 
@@ -140,46 +139,11 @@ class Handle
     select(statement, row_builder).collect { |row| row.at(0) }
   end
 
-  def multi_select(statement_infos, dflt_row_builder = nil)
-    statements = []
-    row_builders = []
-    statement_infos.each do |info|
-      if info.is_a?(Array)
-        statements.push(info.first)
-        row_builders.push(info.last)
-      else
-        statements.push(info)
-        row_builders.push(nil)
-      end
-    end
-    sqlstr = statements.join(';')
-
-    dohlog.info(sqlstr)
-    @mysqlh.query(sqlstr)
-    retval = []
-    while true
-      custom_builder = row_builders.shift
-      if @mysqlh.field_count > 0
-        result_set = @mysqlh.store_result
-        dohlog.info("selected #{result_set.num_rows} rows")
-        rows = get_row_builder(custom_builder || dflt_row_builder).build_rows(result_set)
-        result_set.free
-        retval.push(rows)
-      end
-      break unless @mysqlh.next_result
-    end
-    retval
-  rescue Exception => excpt
-    dohlog.error("caught exception during query: #{sqlstr}", excpt)
-    raise
-  end
-
 private
   def generic_query(statement)
     sqlstr = statement.to_s
     dohlog.info(sqlstr)
     @mysqlh.query(sqlstr)
-    @mysqlh.store_result if @mysqlh.field_count > 0
   rescue Exception => excpt
     dohlog.error("caught exception during query: #{sqlstr}", excpt)
     raise

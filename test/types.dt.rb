@@ -3,12 +3,6 @@ require 'doh/mysql/types'
 
 module DohDb
 
-class ConvertToString
-  def self.build(field, value)
-    value.to_s
-  end
-end
-
 class Test_types < DohTest::TestGroup
   def test_stuff
     dbh = DohDb::request_handle
@@ -23,9 +17,6 @@ class Test_types < DohTest::TestGroup
     DohDb::query("CREATE TEMPORARY TABLE #{tbl2} (other INT)")
     DohDb::query("INSERT INTO #{tbl2} SET other = 7")
     assert_equal(5, DohDb::select_field("SELECT amount, other FROM #{tbl}, #{tbl2}"))
-
-    DohDb::register_column_type(DohDb::connector_instance.database, tbl, 'amount', ConvertToString)
-    assert_equal('5', DohDb::select_field("SELECT amount FROM #{tbl}"))
   end
 end
 

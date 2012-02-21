@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.required_ruby_version = '>= 1.9.2'
 	s.add_runtime_dependency 'dohutil', '>= 0.1.4'
+	s.add_runtime_dependency 'mysql2', '>= 0.3.11'
   s.authors = ['Makani Mason', 'Kem Mason']
   s.bindir = 'bin'
   s.homepage = 'https://github.com/atpsoft/dohmysql'
