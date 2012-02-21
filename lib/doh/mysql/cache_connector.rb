@@ -1,6 +1,7 @@
 require 'mysql2'
 require 'doh/mysql/handle'
 require 'doh/mysql/typed_row_builder'
+Mysql2::Client.default_query_options[:cast_booleans] = true
 
 module DohDb
 
