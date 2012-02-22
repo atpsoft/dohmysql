@@ -16,7 +16,11 @@ class TypedRowBuilder
       values = []
       row.each_pair do |key, value|
         keys.push(key)
-        values.push(value)
+        if value.is_a?(Time)
+          values.push(value.to_datetime)
+        else
+          values.push(value)
+        end
       end
       retval.push(@row_klass.new(keys, values))
     end
