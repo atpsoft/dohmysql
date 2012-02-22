@@ -10,11 +10,15 @@ class TypedRowBuilder
   def build_rows(result_set)
     return [] if result_set.size == 0
 
-    field_names = result_set.fields
-
     retval = []
     result_set.each do |row|
-      retval.push(@row_klass.new(field_names, row.values))
+      keys = []
+      values = []
+      row.each_pair do |key, value|
+        keys.push(key)
+        values.push(value)
+      end
+      retval.push(@row_klass.new(keys, values))
     end
     retval
   end
