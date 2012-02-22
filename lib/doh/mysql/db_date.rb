@@ -1,4 +1,4 @@
-require 'date'
+require 'doh/core_ext/datewithtime'
 require 'doh/mysql/to_sql'
 
 module DohDb
@@ -21,7 +21,7 @@ def self.today
 end
 
 def self.now
-  dt = DateTime.zow
+  dt = DateTime.now.utc
   DateTimeNow.new(dt.year, dt.month, dt.mday, dt.hour, dt.min, dt.sec, dt.zone)
 end
 
