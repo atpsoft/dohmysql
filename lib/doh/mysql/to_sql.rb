@@ -40,6 +40,12 @@ class DateTime
   end
 end
 
+class Time
+  def to_sql
+    '"' + strftime('%Y-%m-%d %H:%M:%S') + '"'
+  end
+end
+
 class TrueClass
   def to_sql
     '1'
