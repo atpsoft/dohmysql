@@ -19,7 +19,6 @@ class DatabaseCreator
 
   def create_database_copy(dest_db, source_db, drop_first = false)
     create_one_database(get_nodb_handle, dest_db, source_db, drop_first)
-    DohDb::link_database_types(dest_db, source_db)
   end
 
   def create_all_databases(drop_first = false)
