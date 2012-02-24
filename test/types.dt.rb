@@ -20,7 +20,7 @@ class Test_types < DohTest::TestGroup
     assert_equal(5, row['int_field'])
     assert_equal(true, row['bool_field'])
     assert_equal(Date.new(2012,2,20), row['date_field'])
-    assert_equal(Time.utc(2012,2,20, 21, 6, 0), row['datetime_field'])
+    assert_equal(DateTime.new(2012,2,20, 21, 6, 0).utc, row['datetime_field'])
     assert_equal(BigDecimal('54.12'), row['decimal_field'])
   end
 end
