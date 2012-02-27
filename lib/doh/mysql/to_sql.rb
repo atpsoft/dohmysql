@@ -1,24 +1,11 @@
 require 'bigdecimal'
 require 'date'
-begin
-  require 'mysql'
-  $mysql_loaded = true
-rescue
-  $mysql_loaded = false
-end
+require 'mysql2'
 
 class Object
   def to_sql
-    if $mysql_loaded
-      str = Mysql.escape_string(to_s)
-    else
-      str = non_mysql_escape_string
-    end
+    str = Mysql2::Client.escape(to_s)
     '"' + str + '"'
-  end
-private
-  def non_mysql_escape_string
-    str.gsub('\\', '\\\\').gsub('\'', '\\\'').gsub('"', '\\"')
   end
 end
 

@@ -12,11 +12,6 @@ def self.activate
   root_cfg = Doh::config
   return unless root_cfg.fetch('enable_database', true)
   return unless root_cfg.key?('database')
-  begin
-    require 'mysql'
-  rescue LoadError => e
-    return
-  end
   db_cfg = root_cfg['database']
   require 'doh/mysql'
   require 'doh/mysql/require_dbtypes'
