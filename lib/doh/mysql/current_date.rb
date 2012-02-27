@@ -1,6 +1,7 @@
 require 'doh/current_date'
 require 'doh/mysql/db_date'
 require 'doh/mysql/parse'
+require 'doh/mysql/to_sql'
 
 module DohDb
 

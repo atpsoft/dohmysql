@@ -5,6 +5,7 @@ require 'doh/mysql/typed_row_builder'
 require 'doh/mysql/writable_row'
 require 'doh/mysql/hash_row'
 require 'doh/mysql/smart_row'
+require 'doh/mysql/to_sql'
 
 module DohDb
 
