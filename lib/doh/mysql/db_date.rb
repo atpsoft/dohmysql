@@ -1,3 +1,4 @@
+require 'doh/core_ext/date'
 require 'doh/core_ext/datewithtime'
 require 'doh/mysql/to_sql'
 
@@ -16,12 +17,12 @@ class DateTimeNow < DateTime
 end
 
 def self.today
-  day = Date.today
+  day = Date.utcday
   DateToday.new(day.year, day.month, day.mday)
 end
 
 def self.now
-  dt = DateTime.now.utc
+  dt = DateTime.utcnow
   DateTimeNow.new(dt.year, dt.month, dt.mday, dt.hour, dt.min, dt.sec, dt.zone)
 end
 
