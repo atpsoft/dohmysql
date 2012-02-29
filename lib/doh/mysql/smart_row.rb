@@ -1,6 +1,7 @@
 require 'doh/mysql/writable_row'
 require 'doh/to_display'
 require 'doh/mysql/virtual'
+require 'sqlstmt/update'
 
 module DohDb
 
@@ -96,8 +97,9 @@ class AbstractSmartRow < AbstractRow
   def db_update
     return if @changed_keys.empty?
     before_db_update
-    builder = BuildSQL::SimpleUpdateRow.new(@table, nil, get(primary_key), primary_key)
-    @changed_keys.each {|key| builder.setc(key, get(key).to_sql)}
+    builder = SqlStmt::Update.new.table(@table)
+    builder.where("#{primary_key} = #{get(primary_key).to_sql}")
+    @changed_keys.each {|key| builder.field(key, get(key).to_sql)}
     DohDb::query(builder)
     after_db_update
     @changed_keys.clear
