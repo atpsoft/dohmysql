@@ -82,10 +82,6 @@ class AbstractSmartRow < AbstractRow
     @values.delete_at(index)
   end
 
-  def record_id=(value)
-    set(primary_key, value)
-  end
-
   def db_insert
     newid = DohDb::insert_hash(self, @table)
     if newid != 0

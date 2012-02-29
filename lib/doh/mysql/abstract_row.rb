@@ -58,10 +58,6 @@ class AbstractRow
     return val.nil? || (val.respond_to?(:empty?) && val.empty?)
   end
 
-  def record_id
-    get('id')
-  end
-
 protected
   def parse_initialize_args(*args)
     if args.empty?
