@@ -59,7 +59,7 @@ class Test_Handle < DohTest::TestGroup
     hash1 = {'value' => 1}
     assert_equal(0, dbh.insert_hash(hash1, tbl))
     assert_raises(Mysql2::Error) { dbh.insert_hash(hash1, tbl) }
-    assert_equal(0, dbh.insert_hash(hash1, tbl, true))
+    assert_equal(0, dbh.insert_ignore_hash(hash1, tbl))
   end
 end
 

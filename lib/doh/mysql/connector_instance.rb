@@ -32,12 +32,16 @@ def self.insert(statement)
   request_handle.insert(statement)
 end
 
-def self.insert_hash(hash, table, ignore = nil)
-  request_handle.insert_hash(hash, table, ignore)
+def self.insert_hash(hash, table, quote_strings = true)
+  request_handle.insert_hash(hash, table, quote_strings)
 end
 
-def self.replace_hash(hash, table)
-  request_handle.replace_hash(hash, table)
+def self.insert_ignore_hash(hash, table, quote_strings = true)
+  request_handle.insert_ignore_hash(hash, table, quote_strings)
+end
+
+def self.replace_hash(hash, table, quote_strings = true)
+  request_handle.replace_hash(hash, table, quote_strings)
 end
 
 def self.select(statement, row_builder = nil)

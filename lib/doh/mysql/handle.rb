@@ -59,13 +59,16 @@ class Handle
     retval
   end
 
-  def insert_hash(hash, table, ignore = nil)
-    if ignore then keyword = 'INSERT IGNORE' else keyword = 'INSERT' end
-    insert_hash_helper(hash, table, keyword)
+  def insert_hash(hash, table, quote_strings = true)
+    insert_hash_helper(hash, table, 'INSERT', quote_strings)
   end
 
-  def replace_hash(hash, table)
-    insert_hash_helper(hash, table, 'REPLACE')
+  def insert_ignore_hash(hash, table, quote_strings = true)
+    insert_hash_helper(hash, table, 'INSERT IGNORE', quote_strings)
+  end
+
+  def replace_hash(hash, table, quote_strings = true)
+    insert_hash_helper(hash, table, 'REPLACE', quote_strings)
   end
 
   # The most generic form of select.
@@ -150,12 +153,12 @@ private
     raise
   end
 
-  def insert_hash_helper(hash, table, keyword)
+  def insert_hash_helper(hash, table, keyword, quote_strings)
     names = []
     values = []
     hash.each_pair do |key, value|
       names.push(key)
-      values.push(value.to_sql)
+      values.push(if quote_strings || !value.is_a?(String) then value.to_sql else value end)
     end
 
     insert("#{keyword} INTO #{table} (#{names.join(',')}) VALUES (#{values.join(',')})")
