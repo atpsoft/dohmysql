@@ -1,3 +1,4 @@
+require 'mysql2'
 require 'doh/array_to_hash'
 require 'doh/log/stub'
 require 'doh/mysql/error'
@@ -6,13 +7,16 @@ require 'doh/mysql/writable_row'
 require 'doh/mysql/hash_row'
 require 'doh/mysql/smart_row'
 require 'doh/mysql/to_sql'
+Mysql2::Client.default_query_options[:cast_booleans] = true
 
 module DohDb
 
 class Handle
-  def initialize(mysqlh, row_builder = nil)
-    @mysqlh = mysqlh
-    @row_builder = row_builder || TypedRowBuilder.new
+  attr_reader :config
+
+  def initialize(config)
+    @config = config
+    @mysqlh = Mysql2::Client.new(@config)
   end
 
   def close
@@ -166,7 +170,7 @@ private
 
   def get_row_builder(row_builder = nil)
     if row_builder.nil?
-      @row_builder
+      TypedRowBuilder.new
     elsif row_builder == :read
       TypedRowBuilder.new(ReadOnlyRow)
     elsif row_builder == :hash

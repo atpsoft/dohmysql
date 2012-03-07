@@ -5,7 +5,6 @@ module DohDb
 
 def self.convert(table, column, value)
   info = column_info(table)[column]
-#  raise UnknownColumn, "#{table}.#{column}" if info.nil?
   return value if info.nil?
   if value.nil?
     raise CannotBeNull, "#{table}.#{column}" if info['is_nullable'] == 'NO'

@@ -33,7 +33,7 @@ def self.latest_database_version(database = nil)
 end
 
 def self.locked_version_info(database = nil)
-  database ||= (DohDb::connector_instance && DohDb::connector_instance.database) || Doh::config['primary_database']
+  database ||= (DohDb::connector_instance && DohDb::connector_instance.database) || Doh::config['default_database']
   filename = locked_filename(database)
   return [0, nil] unless File.exist?(filename)
   YAML.load_file(filename)

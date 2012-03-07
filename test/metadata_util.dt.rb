@@ -1,15 +1,24 @@
-require_relative 'db_unit_test'
+require_relative 'helpers'
 require 'doh/mysql/metadata_util'
 
 module DohDb
 
 class Test_metadata_util < DohTest::TestGroup
-  def tbl
-    "doh_mysql_metadata_util_test"
+  def before_all
+    # TODO: shouldn't really have to do this, but for now metadata_util is dependent on it
+    init_global_connector
+  end
+
+  def before_each
+    drop_tbl
+  end
+
+  def after_each
+    drop_tbl
   end
 
   def test_stuff
-    dbh = DohDb::request_handle
+    dbh = get_dbh
     dbh.query("CREATE TABLE #{tbl} (num INT, str CHAR(7))")
     column_info = DohDb::column_info(tbl)
     info = column_info['str']
@@ -39,14 +48,6 @@ class Test_metadata_util < DohTest::TestGroup
     assert_equal('num', DohDb::find_primary_key(tbl))
     assert_raises(RuntimeError) { DohDb::find_primary_key(tbl, "this_database_doesnt_exist") }
     assert_raises(RuntimeError) { DohDb::find_primary_key("this table doesn't exist") }
-  end
-
-  def before_each
-    DohDb::query("DROP TABLE IF EXISTS #{tbl}")
-  end
-
-  def after_each
-    DohDb::query("DROP TABLE IF EXISTS #{tbl}")
   end
 end
 

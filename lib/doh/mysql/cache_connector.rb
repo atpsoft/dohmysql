@@ -1,21 +1,13 @@
-require 'mysql2'
 require 'doh/mysql/handle'
-require 'doh/mysql/typed_row_builder'
-Mysql2::Client.default_query_options[:cast_booleans] = true
 
 module DohDb
 
 class CacheConnector
-  attr_accessor :host, :username, :password, :database, :row_builder, :timeout, :port
+  attr_accessor :config
 
-  def initialize(host = nil, username = nil, password = nil, database = nil, row_builder = nil)
-    @host = host
-    @username = username
-    @password = password
-    @database = database
-    @timeout = 1800
-    @port = nil
-    @row_builder = row_builder || TypedRowBuilder.new
+  def initialize(config)
+    @config = config
+    @config[:timeout] ||= 1800
   end
 
   def request_handle(database = nil)
@@ -40,15 +32,15 @@ private
   end
 
   def get_new_handle(database = nil)
-    database ||= @database
-    dbmsg = database.to_s.strip.empty? ? 'no default database' : "database #{database}"
-    dohlog.info("connecting to #@host port #@port as username #@username, #{dbmsg}")
-    mysqlh = Mysql2::Client.new(:host => @host, :username => @username, :password => @password, :database => database, :port => @port)
-    Handle.new(mysqlh, @row_builder)
+    local_config = @config.dup
+    local_config[:database] = database if database
+    dohlog.info("connecting with config: #{local_config}")
+    local_config.delete(:timeout)
+    Handle.new(local_config)
   end
 
   def passed_timeout?
-    Time.now > @last_used + @timeout
+    Time.now > @last_used + @config[:timeout]
   end
 end
 
