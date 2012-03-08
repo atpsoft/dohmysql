@@ -1,7 +1,7 @@
 require 'doh/core_ext/dir'
 require 'doh/mysql/handle'
 require 'doh/mysql/load_sql'
-require 'doh/mysql/version'
+require 'yaml'
 
 module DohDb
 
@@ -80,9 +80,6 @@ private
 
     dbh.query("CREATE DATABASE " + dest_db)
     dbh.query("USE " + dest_db)
-    dbh.query("CREATE TABLE version (version INT UNSIGNED NOT NULL)")
-    dbver = DohDb::latest_database_version(source_db)
-    dbh.query("INSERT INTO version VALUES (#{dbver})")
 
     @connector.config[:database] = dest_db
 
