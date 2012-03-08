@@ -12,16 +12,17 @@ Mysql2::Client.default_query_options[:cast_booleans] = true
 module DohDb
 
 class Handle
-  attr_reader :config
+  attr_reader :config, :mysqlh
 
   def initialize(config)
     @config = config
     @mysqlh = Mysql2::Client.new(@config)
+    dohlog.info("new connection created: id #{@mysqlh.thread_id}")
   end
 
   def close
     unless closed?
-      dohlog.info("closing raw mysql handle: #@mysqlh")
+      dohlog.info("closing connection: id #{@mysqlh.thread_id}")
       @mysqlh.close
       @mysqlh = nil
     end
