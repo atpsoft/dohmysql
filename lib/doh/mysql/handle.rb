@@ -16,6 +16,9 @@ class Handle
 
   def initialize(config)
     @config = config
+    log_config = @config.dup
+    log_config.delete(:password)
+    dohlog.info("creating connection with config: #{log_config}")
     @mysqlh = Mysql2::Client.new(@config)
     dohlog.info("new connection created: id #{@mysqlh.thread_id}")
   end

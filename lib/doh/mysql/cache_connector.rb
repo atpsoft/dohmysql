@@ -12,7 +12,7 @@ class CacheConnector
 
   def request_handle(database = nil)
     if @handle
-      close_handle("handle was unused for too long") if passed_timeout?
+      close_handle('handle was unused for too long') if passed_timeout?
       @handle = nil if @handle && @handle.closed?
     end
     @last_used = Time.now
@@ -20,7 +20,7 @@ class CacheConnector
   end
 
   def reset
-    close_handle("reset")
+    close_handle('reset was called')
   end
 
 private
@@ -34,7 +34,6 @@ private
   def get_new_handle(database = nil)
     local_config = @config.dup
     local_config[:database] = database if database
-    dohlog.info("connecting with config: #{local_config}")
     local_config.delete(:timeout)
     Handle.new(local_config)
   end
