@@ -1,17 +1,6 @@
 require 'doh/mysql/abstract_row'
-require 'doh/to_display'
 
 module DohDb
-
-class RowDisplayProxy
-  def initialize(row)
-    @row = row
-  end
-
-  def method_missing(sym, *ignore_args)
-    @row.send(sym.to_s).to_display
-  end
-end
 
 class AbstractSmartRow < AbstractRow
   attr_accessor :table
@@ -27,15 +16,6 @@ class AbstractSmartRow < AbstractRow
     @keys = @keys.dup
     @values = @values.dup
     @changed_keys = @changed_keys.dup
-    @display_proxy = nil
-  end
-
-  def display(key = nil)
-    if key.nil?
-      @display_proxy ||= RowDisplayProxy.new(self)
-    else
-      get(key).to_display
-    end
   end
 
   def set(key, value, flag_changed = true)
