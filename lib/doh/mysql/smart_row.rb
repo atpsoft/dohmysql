@@ -1,6 +1,5 @@
 require 'doh/mysql/writable_row'
 require 'doh/to_display'
-require 'doh/mysql/virtual'
 require 'sqlstmt/update'
 
 module DohDb
@@ -23,14 +22,12 @@ class AbstractSmartRow < AbstractRow
     @keys = keys.dup
     @values = values.dup
     @changed_keys = Set.new
-    @cached_virtuals = {}
   end
 
   def initialize_copy(orig)
     @keys = @keys.dup
     @values = @values.dup
     @changed_keys = @changed_keys.dup
-    @cached_virtuals = @cached_virtuals.dup
     @display_proxy = nil
   end
 
@@ -114,23 +111,11 @@ protected
 
   def guess_missing_get(key)
     return get(key) if key?(key)
-    retval = get_virtual_field(key)
-    raise "unknown field: #{key}" unless retval
-    retval
+    raise "unknown field: #{key}"
   end
 
   def guess_missing_set(key, value)
     set(key, value)
-  end
-
-  def get_virtual_field(name)
-    cached = @cached_virtuals[name]
-    return cached if cached
-    if idvalue = get(name + '_id')
-      @cached_virtuals[name] = DohDb::LinkedRow.build(name, idvalue.to_i)
-    else
-      nil
-    end
   end
 end
 
