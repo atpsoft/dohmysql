@@ -129,11 +129,4 @@ class SmartRow < AbstractSmartRow
   end
 end
 
-class CustomSmartRow < AbstractSmartRow
-  def initialize(*args)
-    super(*parse_initialize_args(*args))
-    @table = self.class.default_table
-  end
-end
-
 end
