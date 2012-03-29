@@ -1,6 +1,5 @@
-require 'doh/mysql/writable_row'
+require 'doh/mysql/abstract_row'
 require 'doh/to_display'
-require 'sqlstmt/update'
 
 module DohDb
 
@@ -77,36 +76,6 @@ class AbstractSmartRow < AbstractRow
     return unless index
     @keys.delete_at(index)
     @values.delete_at(index)
-  end
-
-  def db_insert
-    newid = DohDb::insert_hash(self, @table)
-    if newid != 0
-      set(primary_key, newid, false)
-    end
-    newid
-  end
-
-  def db_update
-    return if @changed_keys.empty?
-    before_db_update
-    builder = SqlStmt::Update.new.table(@table)
-    builder.where("#{primary_key} = #{get(primary_key).to_sql}")
-    @changed_keys.each {|key| builder.field(key, get(key).to_sql)}
-    DohDb::query(builder)
-    after_db_update
-    @changed_keys.clear
-  end
-
-protected
-  def primary_key
-    DohDb::find_primary_key(@table)
-  end
-
-  def before_db_update
-  end
-
-  def after_db_update
   end
 
   def guess_missing_get(key)
