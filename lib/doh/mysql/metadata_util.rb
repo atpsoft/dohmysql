@@ -33,31 +33,6 @@ def self.field_exist?(table, field, database = nil)
   column_info(table, database).key?(field)
 end
 
-@@primary_keys = {}
-def self.find_primary_key(table, database = nil)
-  if table.index('.')
-    database = table.before('.')
-    table = table.after('.')
-  else
-    database ||= DohDb::connector_instance.config[:database]
-  end
-
-  dbhash = @@primary_keys[database]
-  if dbhash.nil?
-    dbhash = DohDb::select_transpose("SELECT table_name, column_name FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='#{database}' AND ORDINAL_POSITION=1")
-    raise "no information found for database #{database}" if dbhash.empty?
-    @@primary_keys[database] = dbhash
-  end
-
-  retval = dbhash[table]
-  raise "attempting to find_primary_key for table that doesn't exist: #{database}.#{table}" if retval.nil?
-  retval
-end
-
-def self.table_exist?(table, database = nil)
-  !find_primary_key(table, database).nil?
-end
-
 def self.field_list(table, database = nil)
   column_info(table, database).keys
 end

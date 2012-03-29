@@ -42,12 +42,6 @@ class Test_metadata_util < DohTest::TestGroup
     assert_equal('blahbla', newrow['str'])
     assert_equal('blahblahblah', row['num'])
     assert_equal('blahblahblah', row['str'])
-
-    assert(DohDb::table_exist?(tbl))
-
-    assert_equal('num', DohDb::find_primary_key(tbl))
-    assert_raises(RuntimeError) { DohDb::find_primary_key(tbl, "this_database_doesnt_exist") }
-    assert_raises(RuntimeError) { DohDb::find_primary_key("this table doesn't exist") }
   end
 end
 
