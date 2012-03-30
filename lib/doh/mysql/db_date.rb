@@ -1,9 +1,9 @@
-require 'doh/core_ext/utc'
+require 'doh/core_ext/datewithtime'
 
 module DohDb
 
 def self.today
-  retval = Date.utcday
+  retval = Date.today
   def retval.to_sql
     'CURDATE()'
   end
@@ -11,7 +11,7 @@ def self.today
 end
 
 def self.now
-  retval = DateTime.utcnow
+  retval = DateTime.zow
   def retval.to_sql
     'NOW()'
   end
