@@ -8,7 +8,7 @@ def self.column_info(table, database = nil)
   lookup_str = database + '.' + table
   return @@cached_column_info[lookup_str] if @@cached_column_info[lookup_str]
   stmt = "SELECT column_name, is_nullable, data_type, character_maximum_length, numeric_scale, column_type FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='#{database}' AND TABLE_NAME='#{table}'"
-  @@cached_column_info[lookup_str] = DohDb::select_transpose(stmt)
+  @@cached_column_info[lookup_str] = Doh.db.select_transpose(stmt)
 end
 
 def self.field_character_size(table, field, database = nil)
@@ -41,7 +41,7 @@ end
 def self.all_tables(database = nil)
   database ||= DohDb::connector_instance.config[:database]
   @@tables_by_database[database] ||
-    @@tables_by_database[database] ||= DohDb::select_list("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{database}'")
+    @@tables_by_database[database] ||= Doh.db.select_list("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{database}'")
 end
 
 end
