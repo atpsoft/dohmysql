@@ -130,10 +130,10 @@ class Handle
     if field_count < 2
       raise UnexpectedQueryResult, "must select at least 2 fields in order to transpose"
     elsif field_count == 2
-      Doh::array_to_hash(rows) { |row| [row.at(0), row.at(1)] }
+      Doh.array_to_hash(rows) { |row| [row.at(0), row.at(1)] }
     else
       key_field = rows.first.keys.first
-      Doh::array_to_hash(rows) do |row|
+      Doh.array_to_hash(rows) do |row|
         value = row.to_h
         value.delete(key_field)
         [row.at(0), value]

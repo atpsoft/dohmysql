@@ -7,8 +7,8 @@ module DohDb
 
 class DatabaseCreator
   def initialize(sqlfiles_directory = nil, connector = nil)
-    @sqlfiles_directory = sqlfiles_directory || File.join(Doh::root, 'database')
-    @connector = connector || DohDb::connector_instance
+    @sqlfiles_directory = sqlfiles_directory || File.join(Doh.root, 'database')
+    @connector = connector || DohDb.connector_instance
     @include_scripts = true
   end
 
@@ -66,12 +66,12 @@ private
     files = [sql_filename(database, 'tables', table_name)]
     inserts_file = sql_filename(database, 'insert_sql', table_name)
     files.push(inserts_file) if File.exist?(inserts_file)
-    DohDb::load_sql(dbh.config, files)
+    DohDb.load_sql(dbh.config, files)
   end
 
   def create_view(dbh, database, view_name, drop_first)
     dbh.query("DROP VIEW IF EXISTS #{view_name}") if drop_first
-    DohDb::load_sql(dbh.config, [sql_filename(database, 'views', view_name)])
+    DohDb.load_sql(dbh.config, [sql_filename(database, 'views', view_name)])
   end
 
   def create_one_database(dbh, dest_db, source_db, drop_first)
@@ -84,7 +84,7 @@ private
     @connector.config[:database] = dest_db
 
     files = find_files(source_db, 'tables') + find_files(source_db, 'insert_sql') + view_files(source_db)
-    DohDb::load_sql(@connector.config, files)
+    DohDb.load_sql(@connector.config, files)
     return unless @include_scripts
     find_files(source_db, 'insert_scripts', '.rb').each do |filename|
       dohlog.info("loading file: #{filename}")

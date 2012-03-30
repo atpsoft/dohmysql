@@ -5,7 +5,7 @@ require 'doh/mysql/database_creator'
 
 opts = Doh::Options.new(
 {'drop_first' => [false, "-z", "--drop_first", "if true, will drop the database or tables before creating"] \
-,'database' => [Doh::config[:default_database], "-d", "--database <database>", "name of the source database -- defaults to Doh::config[:default_database], currently '#{Doh::config[:default_database]}'"] \
+,'database' => [Doh.config[:default_database], "-d", "--database <database>", "name of the source database -- defaults to Doh.config[:default_database], currently '#{Doh.config[:default_database]}'"] \
 ,'all' => [false, "-a", "--all", "create all databases"] \
 ,'target' => [nil, "-g", "--target <database>", "name of the target database -- defaults to same as source"] \
 ,'tables' => [nil, "-t", "--tables <tables>", "comma-delimited list of tables to create; if specified, no databases are dropped or created"]

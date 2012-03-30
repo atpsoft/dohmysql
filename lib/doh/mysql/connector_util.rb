@@ -15,7 +15,7 @@ def self.drop_create_and_connect(connector, new_default_database = nil)
 end
 
 def self.reconfigure_connector(cfg, connector = nil)
-  connector ||= DohDb::connector_instance
+  connector ||= DohDb.connector_instance
   connector.reset
   connector.host = cfg['host'] if cfg.key?('host')
   connector.username = cfg['username'] if cfg.key?('username')

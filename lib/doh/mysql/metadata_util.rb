@@ -4,7 +4,7 @@ module DohDb
 
 @@cached_column_info = {}
 def self.column_info(table, database = nil)
-  database ||= DohDb::connector_instance.config[:database]
+  database ||= DohDb.connector_instance.config[:database]
   lookup_str = database + '.' + table
   return @@cached_column_info[lookup_str] if @@cached_column_info[lookup_str]
   stmt = "SELECT column_name, is_nullable, data_type, character_maximum_length, numeric_scale, column_type FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='#{database}' AND TABLE_NAME='#{table}'"
@@ -39,7 +39,7 @@ end
 
 @@tables_by_database = {}
 def self.all_tables(database = nil)
-  database ||= DohDb::connector_instance.config[:database]
+  database ||= DohDb.connector_instance.config[:database]
   @@tables_by_database[database] ||
     @@tables_by_database[database] ||= Doh.db.select_list("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{database}'")
 end

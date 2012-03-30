@@ -23,7 +23,7 @@ module InternalTestHelpers
   def init_global_connector
     require 'doh/mysql/connector_instance'
     require 'doh/mysql/cache_connector'
-    DohDb::set_connector_instance(DohDb::CacheConnector.new(dbcfg))
+    DohDb.set_connector_instance(DohDb::CacheConnector.new(dbcfg))
   end
 end
 
