@@ -7,7 +7,7 @@ module DohDb
 
 class DatabaseCreator
   def initialize(sqlfiles_directory = nil, connector = nil)
-    @sqlfiles_directory = sqlfiles_directory || File.join(Doh.root, 'database')
+    @sqlfiles_directory = sqlfiles_directory || File.join(Doh.root, 'data/mysql')
     @connector = connector || DohDb.connector_instance
     @include_scripts = true
   end
