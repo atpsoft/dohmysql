@@ -16,7 +16,7 @@ class MigrateAnalyzer
   end
 
   def check(migrate_name)
-    DohDb::DatabaseCreator.new.create_database_copy(CHECK_DATABASE, @database, true)
+    DohDb::DatabaseCreator.new.create_database_copy(CHECK_DATABASE, @database, true, true)
     dump_sql(@sql_original)
 
     runner = DohDb::MigrateRunner.new(@database)
