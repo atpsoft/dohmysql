@@ -65,7 +65,7 @@ private
   def create_base_table(dbh, database, table_name, drop_first)
     dbh.query("DROP TABLE IF EXISTS #{table_name}") if drop_first
     files = [sql_filename(database, 'tables', table_name)]
-    inserts_file = sql_filename(database, 'insert_sql', table_name)
+    inserts_file = sql_filename(database, 'inserts', table_name)
     files.push(inserts_file) if File.exist?(inserts_file)
     DohDb.load_sql(dbh.config, files)
   end
@@ -85,7 +85,7 @@ private
 
     @connector.config[:database] = dest_db
 
-    files = find_files("#{source_db}/tables/*.sql") + find_files("#{source_db}/insert_sql/*.sql") + view_files(source_db)
+    files = find_files("#{source_db}/tables/*.sql") + find_files("#{source_db}/inserts/*.sql") + view_files(source_db)
     DohDb.load_sql(@connector.config, files)
     run_scripts(source_db) if @include_scripts
     apply_migrates(dbh, source_db) if include_migrates
@@ -102,7 +102,7 @@ private
   end
 
   def run_scripts(source_db)
-    find_files("#{source_db}/insert_scripts/*.rb").each do |filename|
+    find_files("#{source_db}/scripts/*.rb").each do |filename|
       dohlog.info("loading file: #{filename}")
       load(filename)
     end
