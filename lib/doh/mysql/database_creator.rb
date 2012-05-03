@@ -7,7 +7,7 @@ require 'doh/mysql/file_util'
 module DohDb
 
 class DatabaseCreator
-  MIGRATE_TABLE_DEF = "CREATE TABLE migrate (migrated_at DATETIME NOT NULL, name CHAR(50) NOT NULL)"
+  MIGRATE_TABLE_DEF = "CREATE TABLE migrate (migrated_at DATETIME NOT NULL, name CHAR(50) NOT NULL, sql_applied TEXT NOT NULL)"
 
   def initialize(sqlfiles_directory = nil, connector = nil)
     @sqlfiles_directory = sqlfiles_directory || DohDb.sql_files_path
@@ -94,10 +94,10 @@ private
   def apply_migrates(dbh, source_db)
     apply_files = find_files("#{source_db}/migrate/*_apply.sql")
     DohDb.load_sql(@connector.config, apply_files)
-    migrate_names = apply_files.collect {|path| File.basename(path).slice(0..-11)}
-    # NOTE: could package these up into one insert, but it is very small, and will have very few migrates, so not a big deal
-    migrate_names.each do |name|
-      dbh.query("INSERT INTO migrate SET migrated_at = NOW(), name = #{name.to_sql}")
+    apply_files.each do |path|
+      migrate_name = File.basename(path).slice(0..-11)
+      contents = File.open(path) {|file| file.read}
+      dbh.query("INSERT INTO migrate SET migrated_at = NOW(), name = #{migrate_name.to_sql}, sql_applied = #{contents.to_sql}")
     end
   end
 

@@ -24,8 +24,10 @@ class MigrateRunner
     if migrate_exist?(migrate_name)
       return [false, "migration #{migrate_name} has already been applied"]
     end
-    load_sql(apply_filename(migrate_name))
-    Doh.db.query("INSERT INTO #@table SET migrated_at = NOW(), name = #{migrate_name.to_sql}")
+    fname = apply_filename(migrate_name)
+    load_sql(fname)
+    contents = File.open(fname) {|file| file.read}
+    Doh.db.query("INSERT INTO #@table SET migrated_at = NOW(), name = #{migrate_name.to_sql}, sql_applied = #{contents.to_sql}")
     [true, "migration #{migrate_name} applied successfully"]
   rescue Exception => excpt
     [false, excpt.message]
