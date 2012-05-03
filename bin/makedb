@@ -5,6 +5,7 @@ require 'doh/mysql/database_creator'
 
 opts = Doh::Options.new(
 {'drop_first' => [false, "-z", "--drop_first", "if true, will drop the database or tables before creating"] \
+,'skip_migrate' => [false, "-k", "--skip_migrate", "if true, will skip running migrates after creating"] \
 ,'database' => [Doh.config[:default_database], "-d", "--database <database>", "name of the source database -- defaults to Doh.config[:default_database], currently '#{Doh.config[:default_database]}'"] \
 ,'all' => [false, "-a", "--all", "create all databases"] \
 ,'target' => [nil, "-g", "--target <database>", "name of the target database -- defaults to same as source"] \
@@ -20,9 +21,9 @@ db_creator = DohDb::DatabaseCreator.new
 if opts.tables
   db_creator.create_tables(opts.database, opts.drop_first, opts.tables.split(/,/))
 elsif opts.all
-  db_creator.create_all_databases(opts.drop_first)
+  db_creator.create_all_databases(opts.drop_first, !opts.skip_migrate)
 elsif opts.target
-  db_creator.create_database_copy(opts.target, opts.database, opts.drop_first)
+  db_creator.create_database_copy(opts.target, opts.database, opts.drop_first, !opts.skip_migrate)
 else
-  db_creator.create_database(opts.database, opts.drop_first)
+  db_creator.create_database(opts.database, opts.drop_first, !opts.skip_migrate)
 end
