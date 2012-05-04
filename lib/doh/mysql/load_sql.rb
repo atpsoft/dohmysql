@@ -6,8 +6,6 @@ def self.mysql_arg(value, option_specifier)
   if value.to_s.strip.empty? then '' else " -#{option_specifier}#{value}" end
 end
 
-# NOTE: this doesn't work on jruby, but keeping it around in case it's determined to be significantly faster than the more portable version in place now
-# in which case, we can use the popen version on the rubys that it works with and the other one as needed
 def self.load_sql_using_one_popen(dbconfig, filenames)
   dohlog.debug("loading sql file: " + filenames.first) if filenames.size == 1
 
@@ -31,7 +29,11 @@ end
 
 # pass through so we can change implemenation easily
 def self.load_sql(dbconfig, filenames)
-  DohDb.load_sql_using_each_backtick(dbconfig, filenames)
+  if RUBY_ENGINE == "jruby"
+    DohDb.load_sql_using_each_backtick(dbconfig, filenames)
+  else
+    DohDb.load_sql_using_one_popen(dbconfig, filenames)
+  end
 end
 
 # trying Open3 now for better error handling; unknown as of yet if this works under JRuby
@@ -50,4 +52,3 @@ def self.load_sql_using_each_open3(dbconfig, filenames)
 end
 
 end
-
