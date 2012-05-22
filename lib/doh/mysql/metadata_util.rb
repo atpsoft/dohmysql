@@ -40,8 +40,7 @@ end
 @@tables_by_database = {}
 def self.all_tables(database = nil)
   database ||= DohDb.connector_instance.config[:database]
-  @@tables_by_database[database] ||
-    @@tables_by_database[database] ||= Doh.db.select_list("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{database}'")
+  @@tables_by_database[database] ||= Doh.db.select_list("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{database}'")
 end
 
 end
