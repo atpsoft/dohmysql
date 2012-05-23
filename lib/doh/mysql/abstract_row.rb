@@ -29,6 +29,7 @@ class AbstractRow
     @keys.size.times {|index| retval.push([@keys[index], @values[index]])}
     retval
   end
+  alias to_ary to_a
 
   def to_h
     retval = {}
