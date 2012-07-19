@@ -169,7 +169,7 @@ private
       values.push(if quote_strings || !value.is_a?(String) then value.to_sql else value end)
     end
 
-    insert("#{keyword} INTO #{table} (#{names.join(',')}) VALUES (#{values.join(',')})")
+    insert("#{keyword} INTO #{table} (`#{names.join('`,`')}`) VALUES (#{values.join(',')})")
   end
 
   def get_row_builder(row_builder = nil)
