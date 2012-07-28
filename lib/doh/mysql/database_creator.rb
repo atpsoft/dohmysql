@@ -93,6 +93,15 @@ private
 
   def apply_migrates(dbh, source_db)
     apply_files = find_files("#{source_db}/migrate/*_apply.sql")
+    apply_files.sort! do |valx, valy|
+      if valx.end_with?('_before_apply.sql')
+        -1
+      elsif valy.end_with?('_before_apply.sql')
+        1
+      else
+        valx <=> valy
+      end
+    end
     DohDb.load_sql(@connector.config, apply_files)
     apply_files.each do |path|
       migrate_name = File.basename(path).slice(0..-11)
