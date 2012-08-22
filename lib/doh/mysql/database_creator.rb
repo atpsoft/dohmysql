@@ -93,15 +93,18 @@ private
 
   def apply_migrates(dbh, source_db)
     apply_files = find_files("#{source_db}/migrate/*_apply.sql")
-    apply_files.sort! do |valx, valy|
-      if valx.end_with?('_before_apply.sql')
-        -1
-      elsif valy.end_with?('_before_apply.sql')
-        1
-      else
-        valx <=> valy
+    migrates = apply_files.collect {|path| File.basename(path).slice(0..-11)}
+
+    migrates.each do |name|
+      base, divider, _ = name.partition('_after')
+      next if divider.empty?
+
+      if migrates.include?("#{base}_before")
+        file_ending = "#{name}_apply.sql"
+        apply_files.delete_if {|path| path.end_with?(file_ending)}
       end
     end
+
     DohDb.load_sql(@connector.config, apply_files)
     apply_files.each do |path|
       migrate_name = File.basename(path).slice(0..-11)
