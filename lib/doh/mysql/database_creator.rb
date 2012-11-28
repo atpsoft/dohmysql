@@ -67,12 +67,12 @@ private
     files = [sql_filename(database, 'tables', table_name)]
     inserts_file = sql_filename(database, 'inserts', table_name)
     files.push(inserts_file) if File.exist?(inserts_file)
-    DohDb.load_sql(dbh.config, files)
+    load_sql(dbh, files)
   end
 
   def create_view(dbh, database, view_name, drop_first)
     dbh.query("DROP VIEW IF EXISTS #{view_name}") if drop_first
-    DohDb.load_sql(dbh.config, [sql_filename(database, 'views', view_name)])
+    load_sql(dbh, [sql_filename(database, 'views', view_name)])
   end
 
   def create_one_database(dbh, dest_db, source_db, drop_first, include_migrates)
@@ -86,9 +86,21 @@ private
     @connector.config[:database] = dest_db
 
     files = find_files("#{source_db}/tables/*.sql") + find_files("#{source_db}/inserts/*.sql") + view_files(source_db)
-    DohDb.load_sql(@connector.config, files)
+    load_sql(dbh, files)
     run_scripts(source_db) if @include_scripts
     apply_migrates(dbh, source_db) if include_migrates
+  end
+
+  def load_sql(dbh, files)
+    files.each do |filename|
+      contents = File.read(filename)
+      queries = contents.split(/;$/)
+      queries.each do |str|
+        str.strip!
+        next if str.empty?
+        dbh.query(str)
+      end
+    end
   end
 
   def apply_migrates(dbh, source_db)
@@ -105,7 +117,7 @@ private
       end
     end
 
-    DohDb.load_sql(@connector.config, apply_files)
+    load_sql(dbh, apply_files)
     apply_files.each do |path|
       migrate_name = File.basename(path).slice(0..-11)
       contents = File.open(path) {|file| file.read}
