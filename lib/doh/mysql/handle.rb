@@ -155,7 +155,7 @@ class Handle
     query("START TRANSACTION")
     need_rollback = true
     begin
-      retval = yield
+      retval = yield(self)
       query("COMMIT")
       need_rollback = false
     ensure
