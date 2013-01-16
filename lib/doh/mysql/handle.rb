@@ -151,6 +151,19 @@ class Handle
     select(statement, row_builder).collect { |row| row.at(0) }
   end
 
+  def transaction
+    need_rollback = true
+    query("BEGIN")
+    begin
+      retval = yield
+      query("COMMIT")
+      need_rollback = false
+    ensure
+      query("ROLLBACK") if need_rollback
+    end
+    retval
+  end
+
 private
   def generic_query(statement)
     sqlstr = statement.to_s
