@@ -152,7 +152,7 @@ class Handle
   end
 
   def transaction
-    query("BEGIN")
+    query("START TRANSACTION")
     need_rollback = true
     begin
       retval = yield
