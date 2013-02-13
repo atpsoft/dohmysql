@@ -92,15 +92,16 @@ private
   end
 
   def load_sql(dbh, files)
-    files.each do |filename|
-      contents = File.read(filename)
-      queries = contents.split(/;$/)
-      queries.each do |str|
-        str.strip!
-        next if str.empty?
-        dbh.query(str)
-      end
-    end
+    DohDb.load_sql_using_each_open3(@connector.config, files)
+    # files.each do |filename|
+    #   contents = File.read(filename)
+    #   queries = contents.split(/;$/)
+    #   queries.each do |str|
+    #     str.strip!
+    #     next if str.empty?
+    #     dbh.query(str)
+    #   end
+    # end
   end
 
   def apply_migrates(dbh, source_db)
