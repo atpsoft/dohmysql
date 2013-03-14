@@ -48,7 +48,7 @@ def self.load_sql_using_each_open3(dbconfig, filenames)
     stdoutstr = stdout.read
     stdout.close
     stderrstr = stderr.read
-    raise "#{stderrstr}" if !stderrstr.empty?
+    raise "#{stderrstr} occured while loading file: #{elem}" if !stderrstr.empty?
   end
 end
 
