@@ -1,6 +1,6 @@
 require 'mysql2'
 require 'doh/array_to_hash'
-require 'doh/log/stub'
+require 'dohlog'
 require 'doh/mysql/error'
 require 'doh/mysql/typed_row_builder'
 require 'doh/mysql/writable_row'
