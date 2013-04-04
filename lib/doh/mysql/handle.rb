@@ -1,6 +1,6 @@
 require 'mysql2'
 require 'doh/array_to_hash'
-require 'dohlog'
+require 'doh/mysql/logger'
 require 'doh/mysql/error'
 require 'doh/mysql/typed_row_builder'
 require 'doh/mysql/writable_row'
@@ -18,14 +18,14 @@ class Handle
     @config = config
     log_config = @config.dup
     log_config.delete(:password)
-    dohlog.info("creating connection with config: #{log_config}")
+    DohDb.logger.call('connection', "creating connection with config: #{log_config}")
     @mysqlh = Mysql2::Client.new(@config)
-    dohlog.info("new connection created: id #{@mysqlh.thread_id}")
+    DohDb.logger.call('connection', "new connection created: id #{@mysqlh.thread_id}")
   end
 
   def close
     unless closed?
-      dohlog.info("closing connection: id #{@mysqlh.thread_id}")
+      DohDb.logger.call('connection', "closing connection: id #{@mysqlh.thread_id}")
       @mysqlh.close
       @mysqlh = nil
     end
@@ -38,14 +38,14 @@ class Handle
   def query(statement)
     generic_query(statement)
     retval = @mysqlh.affected_rows
-    dohlog.info("affected #{retval} rows")
+    DohDb.logger.call('result', "affected #{retval} rows")
     retval
   end
 
   def update(statement)
     generic_query(statement)
     retval = @mysqlh.affected_rows
-    dohlog.info("updated #{retval} rows")
+    DohDb.logger.call('result', "updated #{retval} rows")
     retval
   end
 
@@ -63,7 +63,7 @@ class Handle
   def insert(statement)
     generic_query(statement)
     retval = @mysqlh.last_id
-    dohlog.info("insert_id was #{retval}")
+    DohDb.logger.call('result', "insert_id was #{retval}")
     retval
   end
 
@@ -83,7 +83,7 @@ class Handle
   # It calls to_s on the statement object to facilitate the use of sql builder objects.
   def select(statement, row_builder = nil)
     result_set = generic_query(statement)
-    dohlog.info("selected #{result_set.size} rows")
+    DohDb.logger.call('result', "selected #{result_set.size} rows")
     rows = get_row_builder(row_builder).build_rows(result_set)
     rows
   end
@@ -167,10 +167,10 @@ class Handle
 private
   def generic_query(statement)
     sqlstr = statement.to_s
-    dohlog.info(sqlstr)
+    DohDb.logger.call('query', sqlstr)
     @mysqlh.query(sqlstr)
   rescue Exception => excpt
-    dohlog.error("caught exception during query: #{sqlstr}", excpt)
+    DohDb.logger.call('error', "caught exception #{excpt.message} during query: #{sqlstr}")
     raise
   end
 
