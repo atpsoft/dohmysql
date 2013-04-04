@@ -15,13 +15,13 @@ end
 if success
   puts "succcess: " + msg
   if NOTIFY_COMMANDS.include?(CMD_NAME)
-    dohlog.notify("success: #{msg}")
+    dohlog.info("success: #{msg}")
   end
 else
   warn "***************** FAILURE **********************"
   warn msg
   if NOTIFY_COMMANDS.include?(CMD_NAME)
-    dohlog.notify("FAILURE: #{msg}")
+    dohlog.info("FAILURE: #{msg}")
   end
   exit 1
 end
