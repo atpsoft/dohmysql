@@ -16,6 +16,7 @@ class Handle
 
   def initialize(config)
     @config = config
+    @testing_rollback = false
     log_config = @config.dup
     log_config.delete(:password)
     DohDb.logger.call('connection', "creating connection with config: #{log_config}")
