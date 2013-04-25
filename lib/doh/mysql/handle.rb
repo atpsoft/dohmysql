@@ -156,14 +156,24 @@ class Handle
     need_rollback = true
     begin
       retval = yield(self)
-      query("COMMIT")
-      need_rollback = false
+      if !@testing_rollback
+        query("COMMIT")
+        need_rollback = false
+      end
     ensure
       query("ROLLBACK") if need_rollback
     end
     retval
   end
 
+  def test_transaction_rollback
+    begin
+      @testing_rollback = true
+      yield(self)
+    ensure
+      @testing_rollback = false
+    end
+  end
 private
   def generic_query(statement)
     sqlstr = statement.to_s
