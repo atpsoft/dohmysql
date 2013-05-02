@@ -20,6 +20,7 @@ end.join("\n")
 
 OPTS = Doh::Options.new(
 {'database' => [Doh.config[:default_database], "-d", "--database <database>", "name of the database to migrate -- defaults to config[:default_database], currently '#{Doh.config[:default_database]}'"] \
+, 'runafter' => [false, "-a", "--after", "for migrate make, creates the migrations designed to be run after a deploy (defaults to before)"] \
 }, true, "Commands:\n\n#{cmd_detail}")
 
 CMD_NAME, CMD_ARGS = OPTS.varargs.shift, OPTS.varargs

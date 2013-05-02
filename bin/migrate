@@ -7,7 +7,7 @@ module DohDb
 module Migrate
 
 if ['make', 'apply', 'revert'].include?(CMD_NAME)
-  success, msg = DohDb::MigrateRunner.new(OPTS.database).send(CMD_NAME, *CMD_ARGS)
+  success, msg = DohDb::MigrateRunner.new(OPTS.database).send(CMD_NAME, *CMD_ARGS, OPTS)
 elsif ['check', 'verify'].include?(CMD_NAME)
   success, msg = DohDb::MigrateAnalyzer.new(OPTS.database).send(CMD_NAME, *CMD_ARGS)
 end

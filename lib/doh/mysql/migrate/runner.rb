@@ -10,21 +10,21 @@ class MigrateRunner
     @config = DohDb::connector_instance.config
   end
 
-  def make(migrate_name)
-    apply_fname = apply_filename(migrate_name)
+  def make(migrate_name, opts)
+    apply_fname = apply_filename(migrate_name, opts)
     if File.exist?(apply_fname)
       return [false, "it appears that migration #{migrate_name} already exists"]
     end
     `touch #{apply_fname}`
-    `touch #{revert_filename(migrate_name)}`
+    `touch #{revert_filename(migrate_name, opts)}`
     [true, "files for migration #{migrate_name} created in #{@directory}"]
   end
 
-  def apply(migrate_name)
+  def apply(migrate_name, opts)
     if migrate_exist?(migrate_name)
       return [false, "migration #{migrate_name} has already been applied"]
     end
-    fname = apply_filename(migrate_name)
+    fname = apply_filename(migrate_name, opts)
     load_sql(fname)
     contents = File.open(fname) {|file| file.read}
     Doh.db.query("INSERT INTO #@table SET migrated_at = NOW(), name = #{migrate_name.to_sql}, sql_applied = #{contents.to_sql}")
@@ -33,11 +33,11 @@ class MigrateRunner
     [false, excpt.message]
   end
 
-  def revert(migrate_name)
+  def revert(migrate_name, opts)
     unless migrate_exist?(migrate_name)
       return [false, "migration #{migrate_name} can't be reverted until it has been applied"]
     end
-    load_sql(revert_filename(migrate_name))
+    load_sql(revert_filename(migrate_name, opts))
     Doh.db.query("DELETE FROM #@table WHERE name = #{migrate_name.to_sql}")
     [true, "migration #{migrate_name} reverted successfully"]
   rescue Exception => excpt
@@ -45,12 +45,14 @@ class MigrateRunner
   end
 
 private
-  def apply_filename(migrate_name)
-    File.join(@directory, "#{migrate_name}_apply.sql")
+  def apply_filename(migrate_name, opts)
+    position_str = opts.runafter ? 'after' : 'before'
+    File.join(@directory, "#{migrate_name}_#{position_str}_apply.sql")
   end
 
-  def revert_filename(migrate_name)
-    File.join(@directory, "#{migrate_name}_revert.sql")
+  def revert_filename(migrate_name, opts)
+    position_str = opts.runafter ? 'before' : 'after'
+    File.join(@directory, "#{migrate_name}_#{position_str}_revert.sql")
   end
 
   def load_sql(filename)
