@@ -44,15 +44,22 @@ class MigrateRunner
     [false, excpt.message]
   end
 
+  def self.get_filename(directory, cmd, migrate_name, opts)
+    if (cmd == 'apply')
+      position_str = opts.runafter ? 'after' : 'before'
+    else
+      position_str = opts.runafter ? 'before' : 'after'
+    end
+    File.join(directory, "#{migrate_name}_#{position_str}_#{cmd}.sql")
+  end
+
 private
   def apply_filename(migrate_name, opts)
-    position_str = opts.runafter ? 'after' : 'before'
-    File.join(@directory, "#{migrate_name}_#{position_str}_apply.sql")
+    MigrateRunner::get_filename(@directory, 'apply', migrate_name, opts)
   end
 
   def revert_filename(migrate_name, opts)
-    position_str = opts.runafter ? 'before' : 'after'
-    File.join(@directory, "#{migrate_name}_#{position_str}_revert.sql")
+    MigrateRunner::get_filename(@directory, 'revert', migrate_name, opts)
   end
 
   def load_sql(filename)
