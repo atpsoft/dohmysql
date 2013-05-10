@@ -1,3 +1,4 @@
+require 'dohlog'
 require 'doh/mysql/handle'
 
 module DohDb
