@@ -60,10 +60,10 @@ class Test_Handle < DohTest::TestGroup
   def test_bad_handle_reconnect
     dbh = get_dbh
     begin
-      Timeout.timeout(0.001) { Doh.db.select_field("SELECT SLEEP(1), 0 FROM mysql.user GROUP BY 2") }
+      Timeout.timeout(0.001) { dbh.select_field("SELECT SLEEP(1), 0 FROM mysql.user GROUP BY 2") }
     rescue => _
     end
-    assert_equal(3, Doh.db.select_field("SELECT 3 FROM mysql.user GROUP BY 1"))
+    assert_equal(3, dbh.select_field("SELECT 3 FROM mysql.user GROUP BY 1"))
   end
 end
 
