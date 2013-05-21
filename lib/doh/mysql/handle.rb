@@ -18,6 +18,7 @@ class Handle
     @config = config
     @testing_rollback = false
     log_config = @config.dup
+    @config[:reconnect] = true if !@config.keys.include?(:reconnect)
     log_config.delete(:password)
     DohDb.logger.call('connection', "creating connection with config: #{log_config}")
     @mysqlh = Mysql2::Client.new(@config)
