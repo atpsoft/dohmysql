@@ -26,9 +26,12 @@ class Handle
 
   def close
     unless closed?
-      DohDb.logger.call('connection', "closing connection: id #{@mysqlh.thread_id}")
-      @mysqlh.close
-      @mysqlh = nil
+      begin
+        DohDb.logger.call('connection', "closing connection: id #{@mysqlh.thread_id}")
+        @mysqlh.close
+      ensure
+        @mysqlh = nil
+      end
     end
   end
 
@@ -182,6 +185,7 @@ private
     @mysqlh.query(sqlstr)
   rescue Exception => excpt
     DohDb.logger.call('error', "caught exception #{excpt.message} during query: #{sqlstr}")
+    close
     raise
   end
 
