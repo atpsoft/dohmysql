@@ -27,7 +27,7 @@ class CacheConnector
 private
   def close_handle(msg)
     return unless @handle
-    dohlog.debug("closing previous database connection - #{msg}")
+    DohDb.logger.call('debug', "closing previous database connection - #{msg}")
     @handle.close
     @handle = nil
   end
