@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require 'doh/app/init_from_pwd'
-require 'doh/options'
-require 'doh/mysql/database_creator'
+require 'dohutil/app/init_from_pwd'
+require 'dohroot/options'
+require 'dohmysql/database_creator'
 
 opts = Doh::Options.new(
 {'drop_first' => [false, "-z", "--drop_first", "if true, will drop the database or tables before creating"] \

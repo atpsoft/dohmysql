@@ -1,4 +1,4 @@
-require 'doh/mysql/writable_row'
+require 'dohmysql/writable_row'
 
 module DohDb
 

@@ -1,5 +1,5 @@
-require 'doh/current_date'
-require 'doh/mysql/db_date'
+require 'dohutil/current_date'
+require 'dohmysql/db_date'
 
 module DohDb
 

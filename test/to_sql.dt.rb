@@ -1,4 +1,4 @@
-require 'doh/mysql/to_sql'
+require 'dohmysql/to_sql'
 
 module DohDb
 

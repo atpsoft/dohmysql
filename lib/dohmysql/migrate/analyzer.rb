@@ -1,5 +1,5 @@
-require 'doh/mysql/migrate/runner'
-require 'doh/mysql/database_creator'
+require 'dohmysql/migrate/runner'
+require 'dohmysql/database_creator'
 require 'open3'
 
 module DohDb

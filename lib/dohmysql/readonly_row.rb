@@ -1,4 +1,4 @@
-require 'doh/mysql/abstract_row'
+require 'dohmysql/abstract_row'
 
 module DohDb
 

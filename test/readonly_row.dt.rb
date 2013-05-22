@@ -1,4 +1,4 @@
-require 'doh/mysql/readonly_row'
+require 'dohmysql/readonly_row'
 
 module DohDb
 

@@ -1,5 +1,5 @@
 require_relative 'helpers'
-require 'doh/mysql/metadata_util'
+require 'dohmysql/metadata_util'
 
 module DohDb
 

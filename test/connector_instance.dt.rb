@@ -1,4 +1,4 @@
-require 'doh/mysql/connector_instance'
+require 'dohmysql/connector_instance'
 require_relative 'helpers'
 
 module DohDb

@@ -1,5 +1,5 @@
 require_relative 'helpers'
-require 'doh/mysql/handle'
+require 'dohmysql/handle'
 
 module DohDb
 

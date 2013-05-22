@@ -1,5 +1,5 @@
-require 'doh/mysql/db_date'
-require 'doh/mysql/to_sql'
+require 'dohmysql/db_date'
+require 'dohmysql/to_sql'
 
 module DohDb
 

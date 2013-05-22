@@ -1,8 +1,8 @@
-require 'doh/core_ext/dir'
-require 'doh/mysql/handle'
-require 'doh/mysql/load_sql'
+require 'dohutil/core_ext/dir'
+require 'dohmysql/handle'
+require 'dohmysql/load_sql'
 require 'yaml'
-require 'doh/mysql/file_util'
+require 'dohmysql/file_util'
 
 module DohDb
 

@@ -1,5 +1,5 @@
-require 'doh/core_ext/string'
-require 'doh/mysql/abstract_row'
+require 'dohutil/core_ext/string'
+require 'dohmysql/abstract_row'
 require 'set'
 
 module DohDb

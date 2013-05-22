@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
-require 'doh/app/cli'
-require 'doh/mysql/migrate/runner'
-require 'doh/mysql/migrate/analyzer'
-require 'doh/mysql/migrate/options'
+require 'dohutil/app/cli'
+require 'dohmysql/migrate/runner'
+require 'dohmysql/migrate/analyzer'
+require 'dohmysql/migrate/options'
+
 module DohDb
 module Migrate
 

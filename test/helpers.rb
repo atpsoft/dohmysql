@@ -16,13 +16,13 @@ module InternalTestHelpers
   end
 
   def get_dbh
-    require 'doh/mysql/handle'
+    require 'dohmysql/handle'
     DohDb::Handle.new(dbcfg)
   end
 
   def init_global_connector
-    require 'doh/mysql/connector_instance'
-    require 'doh/mysql/cache_connector'
+    require 'dohmysql/connector_instance'
+    require 'dohmysql/cache_connector'
     DohDb.set_connector_instance(DohDb::CacheConnector.new(dbcfg))
   end
 end

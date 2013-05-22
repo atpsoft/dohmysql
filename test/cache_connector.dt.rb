@@ -1,4 +1,4 @@
-require 'doh/mysql/cache_connector'
+require 'dohmysql/cache_connector'
 require_relative 'helpers'
 
 module DohDb

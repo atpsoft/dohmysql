@@ -1,5 +1,5 @@
 require 'dohlog'
-require 'doh/mysql/handle'
+require 'dohmysql/handle'
 
 module DohDb
 

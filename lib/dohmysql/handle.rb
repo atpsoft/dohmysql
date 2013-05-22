@@ -1,12 +1,12 @@
 require 'mysql2'
-require 'doh/array_to_hash'
-require 'doh/mysql/logger'
-require 'doh/mysql/error'
-require 'doh/mysql/typed_row_builder'
-require 'doh/mysql/writable_row'
-require 'doh/mysql/hash_row'
-require 'doh/mysql/smart_row'
-require 'doh/mysql/to_sql'
+require 'dohutil/array_to_hash'
+require 'dohmysql/logger'
+require 'dohmysql/error'
+require 'dohmysql/typed_row_builder'
+require 'dohmysql/writable_row'
+require 'dohmysql/hash_row'
+require 'dohmysql/smart_row'
+require 'dohmysql/to_sql'
 Mysql2::Client.default_query_options[:cast_booleans] = true
 
 module DohDb
