@@ -76,8 +76,16 @@ class Handle
     insert_hash_helper(hash, table, 'INSERT', quote_strings)
   end
 
+  def insert_hashes(hashes, table, quote_strings = true)
+    insert_hashes_helper(hashes, table, 'INSERT', quote_strings)
+  end
+
   def insert_ignore_hash(hash, table, quote_strings = true)
     insert_hash_helper(hash, table, 'INSERT IGNORE', quote_strings)
+  end
+
+  def insert_ignore_hashes(hash, table, quote_strings = true)
+    insert_hashes_helper(hash, table, 'INSERT IGNORE', quote_strings)
   end
 
   def replace_hash(hash, table, quote_strings = true)
@@ -190,6 +198,10 @@ private
     raise
   end
 
+  def get_key_insert_str(keys)
+    "(`#{keys.join('`,`')}`)"
+  end
+
   def insert_hash_helper(hash, table, keyword, quote_strings)
     names = []
     values = []
@@ -200,6 +212,23 @@ private
 
     insert("#{keyword} INTO #{table} (`#{names.join('`,`')}`) VALUES (#{values.join(',')})")
   end
+
+  def insert_hashes_helper(hashes, table, keyword, quote_strings)
+    valuestrs = []
+    keys = hashes[0].keys
+    keystr = get_key_insert_str(keys)
+    hashes.each do |hash|
+      values = []
+      keys.each do |key|
+        value = hash[key]
+        values.push(if quote_strings || !value.is_a?(String) then value.to_sql else value end)
+      end
+      valuestrs.push("(#{values.join(',')})")
+    end
+
+    insert("#{keyword} INTO #{table} #{keystr} VALUES #{valuestrs.join(",")}")
+  end
+
 
   def get_row_builder(row_builder = nil)
     if row_builder.nil?
