@@ -2,6 +2,7 @@ DohMysql
 ========
 
 [![Build Status](https://travis-ci.org/atpsoft/dohmysql.png)](https://travis-ci.org/atpsoft/dohmysql)
+[![Code Climate](https://codeclimate.com/github/atpsoft/dohmysql.png)](https://codeclimate.com/github/atpsoft/dohmysql)
 
 DohMysql is a library for connecting to / querying a mysql database.  Here's an example:
 
