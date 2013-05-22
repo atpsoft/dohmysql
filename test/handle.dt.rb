@@ -57,6 +57,11 @@ class Test_Handle < DohTest::TestGroup
     assert_raises(Mysql2::Error) { dbh.insert_hash(hash1, tbl) }
   end
 
+  def test_insert_hashes
+    dbh = get_dbh
+    dbh.insert_hashes([], '')
+ end
+
   def test_bad_handle_reconnect
     dbh = get_dbh
     begin

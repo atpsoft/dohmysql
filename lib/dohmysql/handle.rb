@@ -214,6 +214,8 @@ private
   end
 
   def insert_hashes_helper(hashes, table, keyword, quote_strings)
+    return if hashes.empty?
+
     valuestrs = []
     keys = hashes[0].keys
     keystr = get_key_insert_str(keys)
