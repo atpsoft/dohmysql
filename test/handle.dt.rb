@@ -52,8 +52,14 @@ class Test_Handle < DohTest::TestGroup
     dbh = get_dbh
     dbh.query("CREATE TEMPORARY TABLE #{tbl} (value INT KEY)")
     hash1 = {'value' => 1}
+    hash2 = {'value' => 2}
+    hash3 = {'value' => 3}
+    hash4 = {'value' => 4}
     assert_equal(0, dbh.insert_hash(hash1, tbl))
     assert_equal(0, dbh.insert_ignore_hash(hash1, tbl))
+    assert_equal(1, dbh.select_field("SELECT COUNT(*) from #{tbl}"))
+    assert_equal(0, dbh.insert_hashes([hash2, hash3, hash4], tbl))
+    assert_equal(4, dbh.select_field("SELECT COUNT(*) from #{tbl}"))
     assert_raises(Mysql2::Error) { dbh.insert_hash(hash1, tbl) }
   end
 
