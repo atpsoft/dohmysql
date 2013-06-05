@@ -9,6 +9,7 @@ class CacheConnector
   def initialize(config)
     @config = config
     @config[:timeout] ||= 1800
+    @handle = nil
   end
 
   def request_handle(database = nil)
