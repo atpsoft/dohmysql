@@ -8,6 +8,8 @@ require 'dohmysql/hash_row'
 require 'dohmysql/smart_row'
 require 'dohmysql/to_sql'
 Mysql2::Client.default_query_options[:cast_booleans] = true
+Mysql2::Client.default_query_options[:database_timezone] = :local
+Mysql2::Client.default_query_options[:application_timezone] = :local
 
 module DohDb
 

@@ -11,7 +11,7 @@ def self.today
 end
 
 def self.now
-  retval = DateTime.zow
+  retval = DateTime.now
   def retval.to_sql
     'NOW()'
   end
