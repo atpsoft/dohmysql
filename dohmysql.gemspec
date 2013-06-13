@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.required_ruby_version = '>= 1.9.3'
   s.add_runtime_dependency 'dohroot', '>= 0.1.2'
-  s.add_runtime_dependency 'dohutil', '>= 0.2.11'
-  s.add_runtime_dependency 'dohlog', '>= 0.2.1'
+  s.add_runtime_dependency 'dohutil', '>= 0.2.14'
+  s.add_runtime_dependency 'dohlog', '>= 0.2.3'
   s.add_runtime_dependency 'mysql2', '>= 0.3.11'
-  s.add_runtime_dependency 'sqlstmt', '>= 0.1.11'
+  s.add_runtime_dependency 'sqlstmt', '>= 0.1.13'
   s.add_development_dependency 'dohtest', '>= 0.1.19'
   s.authors = ['Makani Mason', 'Kem Mason']
   s.bindir = 'bin'
