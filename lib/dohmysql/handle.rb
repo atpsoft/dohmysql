@@ -176,7 +176,7 @@ class Handle
         need_rollback = false
       end
     ensure
-      query("ROLLBACK") if need_rollback
+      close if need_rollback
     end
     retval
   end
