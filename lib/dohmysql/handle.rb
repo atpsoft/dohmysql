@@ -94,6 +94,10 @@ class Handle
     insert_hash_helper(hash, table, 'REPLACE', quote_strings)
   end
 
+  def replace_hashes(hash, table, quote_strings = true)
+    insert_hashes_helper(hash, table, 'REPLACE', quote_strings)
+  end
+
   # The most generic form of select.
   # It calls to_s on the statement object to facilitate the use of sql builder objects.
   def select(statement, row_builder = nil)
