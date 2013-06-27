@@ -1,5 +1,6 @@
 require_relative 'helpers'
 require 'dohmysql/handle'
+require 'timeout'
 
 module DohDb
 

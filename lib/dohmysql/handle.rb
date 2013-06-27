@@ -19,12 +19,9 @@ class Handle
   def initialize(config)
     @config = config
     @testing_rollback = false
-    log_config = @config.dup
     @config[:reconnect] = true if !@config.keys.include?(:reconnect)
-    log_config.delete(:password)
-    DohDb.logger.call('connection', "creating connection with config: #{log_config}")
-    @mysqlh = Mysql2::Client.new(@config)
-    DohDb.logger.call('connection', "new connection created: id #{@mysqlh.thread_id}")
+    @mysqlh = nil
+    reopen
   end
 
   def close
@@ -200,7 +197,7 @@ private
     @mysqlh.query(sqlstr)
   rescue Exception => excpt
     DohDb.logger.call('error', "caught exception #{excpt.message} during query: #{sqlstr}")
-    close
+    reopen
     raise
   end
 
@@ -237,7 +234,6 @@ private
     insert("#{keyword} INTO #{table} #{keystr} VALUES #{valuestrs.join(",")}")
   end
 
-
   def get_row_builder(row_builder = nil)
     if row_builder.nil?
       TypedRowBuilder.new
@@ -254,6 +250,15 @@ private
     else
       TypedRowBuilder.new(row_builder)
     end
+  end
+
+  def reopen
+    close if !closed?
+    log_config = @config.dup
+    log_config.delete(:password)
+    DohDb.logger.call('connection', "creating connection with config: #{log_config}")
+    @mysqlh = Mysql2::Client.new(@config)
+    DohDb.logger.call('connection', "new connection created: id #{@mysqlh.thread_id}")
   end
 end
 
