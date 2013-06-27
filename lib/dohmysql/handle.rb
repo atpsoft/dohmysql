@@ -8,8 +8,8 @@ require 'dohmysql/hash_row'
 require 'dohmysql/smart_row'
 require 'dohmysql/to_sql'
 Mysql2::Client.default_query_options[:cast_booleans] = true
-Mysql2::Client.default_query_options[:database_timezone] = :local
-Mysql2::Client.default_query_options[:application_timezone] = :local
+Mysql2::Client.default_query_options[:database_timezone] = :utc
+Mysql2::Client.default_query_options[:application_timezone] = :utc
 
 module DohDb
 
@@ -92,6 +92,10 @@ class Handle
 
   def replace_hash(hash, table, quote_strings = true)
     insert_hash_helper(hash, table, 'REPLACE', quote_strings)
+  end
+
+  def replace_hashes(hash, table, quote_strings = true)
+    insert_hashes_helper(hash, table, 'REPLACE', quote_strings)
   end
 
   # The most generic form of select.
