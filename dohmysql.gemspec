@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'dohlog', '>= 0.2.4'
   s.add_runtime_dependency 'mysql2', '>= 0.3.11'
   s.add_runtime_dependency 'sqlstmt', '>= 0.1.14'
-  s.add_development_dependency 'dohtest', '>= 0.1.19'
+  s.add_development_dependency 'dohtest', '>= 0.1.24'
   s.authors = ['Makani Mason', 'Kem Mason']
   s.bindir = 'bin'
   s.homepage = 'https://github.com/atpsoft/dohmysql'
