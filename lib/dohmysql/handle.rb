@@ -177,7 +177,7 @@ class Handle
         need_rollback = false
       end
     ensure
-      close if need_rollback
+      reopen if need_rollback
     end
     retval
   end
