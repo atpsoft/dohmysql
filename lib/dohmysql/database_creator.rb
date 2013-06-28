@@ -84,6 +84,7 @@ private
     dbh.query(MIGRATE_TABLE_DEF)
 
     @connector.config[:database] = dest_db
+    dbh.config[:database] = dest_db
 
     files = find_files("#{source_db}/tables/*.sql") + find_files("#{source_db}/inserts/*.sql") + view_files(source_db)
     load_sql(dbh, files)

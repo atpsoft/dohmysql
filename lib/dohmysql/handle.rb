@@ -17,7 +17,7 @@ class Handle
   attr_reader :config, :mysqlh
 
   def initialize(config)
-    @config = config
+    @config = config.dup
     @testing_rollback = false
     @config[:reconnect] = true if !@config.keys.include?(:reconnect)
     @mysqlh = nil
