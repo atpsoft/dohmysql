@@ -196,7 +196,7 @@ private
     DohDb.logger.call('query', sqlstr)
     @mysqlh.query(sqlstr)
   rescue Exception => excpt
-    DohDb.logger.call('error', "caught exception #{excpt.message} during query: #{sqlstr}")
+    DohDb.logger.call('error', "caught exception #{excpt.message} during query: #{sqlstr}", excpt)
     reopen
     raise
   end

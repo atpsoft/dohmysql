@@ -1,7 +1,7 @@
 module DohDb
 
 class StubLogger
-  def self.call(group, msg); end
+  def self.call(group, msg, excpt = nil); end
 end
 
 @logger = StubLogger

@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = 'dohmysql'
-  s.version = '0.2.31'
+  s.version = '0.2.32'
   s.summary = 'friendly mysql client interface'
   s.description = 'wrapper classes around low level mysql gem to provide a better interface'
   s.require_path = 'lib'
