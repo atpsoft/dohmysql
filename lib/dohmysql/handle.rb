@@ -190,6 +190,27 @@ class Handle
       @testing_rollback = false
     end
   end
+
+  def start_select(statement, &block)
+    @async_block = block
+    sqlstr = statement.to_s
+    DohDb.logger.call('query', "starting async select: #{sqlstr}")
+    @mysqlh.query(sqlstr, :async => true)
+  rescue Exception => excpt
+    DohDb.logger.call('error', "caught exception #{excpt.message} starting aysnc query: #{sqlstr}", excpt)
+    reopen
+    raise
+  end
+
+  def finish_select
+    result_set = @mysqlh.async_result
+    DohDb.logger.call('result', "async selected #{result_set.size} rows")
+    rows = get_row_builder.build_rows(result_set)
+    rows.each do |dbrow|
+      @async_block.call(dbrow)
+    end
+  end
+
 private
   def generic_query(statement)
     sqlstr = statement.to_s
