@@ -2,7 +2,7 @@ require 'mysql2'
 require 'dohutil/array_to_hash'
 require 'dohmysql/logger'
 require 'dohmysql/error'
-require 'dohmysql/typed_row_builder'
+require 'dohmysql/typed_build_arg'
 require 'dohmysql/writable_row'
 require 'dohmysql/hash_row'
 require 'dohmysql/smart_row'
@@ -97,18 +97,18 @@ class Handle
 
   # The most generic form of select.
   # It calls to_s on the statement object to facilitate the use of sql builder objects.
-  def select(statement, row_builder = nil)
+  def select(statement, build_arg = nil)
     result_set = generic_query(statement)
     DohDb.logger.call('result', "selected #{result_set.size} rows")
-    rows = get_row_builder(row_builder).build_rows(result_set)
+    rows = get_row_builder(build_arg).build_rows(result_set)
     rows
   end
 
   # Simple convenience wrapper around the generic select call.
   # Throws an exception unless the result set is a single row.
   # Returns the row selected.
-  def select_row(statement, row_builder = nil)
-    rows = select(statement, row_builder)
+  def select_row(statement, build_arg = nil)
+    rows = select(statement, build_arg)
     raise UnexpectedQueryResult, "selected #{rows.size} rows; expected 1" unless rows.size == 1
     rows[0]
   end
@@ -116,22 +116,22 @@ class Handle
   # Simple convenience wrapper around the generic select call.
   # Throws an exception unless the result set is empty or a single row.
   # Returns nil if the result set is empty, or the row selected.
-  def select_optional_row(statement, row_builder = nil)
-    rows = select(statement, row_builder)
+  def select_optional_row(statement, build_arg = nil)
+    rows = select(statement, build_arg)
     raise UnexpectedQueryResult, "selected #{rows.size} rows; expected 0 or 1" if rows.size > 1
     if rows.empty? then nil else rows[0] end
   end
 
   # Simple convenience wrapper around select_row.
   # Returns the first (and typically, the only) field from the selected row.
-  def select_field(statement, row_builder = nil)
-    select_row(statement, row_builder).at(0)
+  def select_field(statement, build_arg = nil)
+    select_row(statement, build_arg).at(0)
   end
 
   # Simple convenience wrapper around select_optional_row.
   # Returns the first (and typically, the only) field from the selected row, if any, or nil.
-  def select_optional_field(statement, row_builder = nil)
-    row = select_optional_row(statement, row_builder)
+  def select_optional_field(statement, build_arg = nil)
+    row = select_optional_row(statement, build_arg)
     row && row.at(0)
   end
 
@@ -139,8 +139,8 @@ class Handle
   # If there are 2 fields, returns a hash where each key is the first field in the result set, and the value is the second field.
   # If there are more than 2 fields, returns a hash where each key is the first field in the result set,
   # and the value is the row itself, as a Hash, and without the field used as a key.
-  def select_transpose(statement, row_builder = nil)
-    rows = select(statement, row_builder)
+  def select_transpose(statement, build_arg = nil)
+    rows = select(statement, build_arg)
     return {} if rows.empty?
     field_count = rows.first.size
     if field_count < 2
@@ -158,13 +158,13 @@ class Handle
   end
 
   # Returns an array of arrays, where the individual arrays contain just the values from each database row -- they lack field names.
-  def select_values(statement, row_builder = nil)
-    select(statement, row_builder).collect { |row| row.values }
+  def select_values(statement, build_arg = nil)
+    select(statement, build_arg).collect { |row| row.values }
   end
 
   # Returns an array of the first (and typically, the only) field of every row in the result set.
-  def select_list(statement, row_builder = nil)
-    select(statement, row_builder).collect { |row| row.at(0) }
+  def select_list(statement, build_arg = nil)
+    select(statement, build_arg).collect { |row| row.at(0) }
   end
 
   def transaction
@@ -255,21 +255,21 @@ private
     insert("#{keyword} INTO #{table} #{keystr} VALUES #{valuestrs.join(",")}")
   end
 
-  def get_row_builder(row_builder = nil)
-    if row_builder.nil?
+  def get_row_builder(build_arg = nil)
+    if build_arg.nil?
       TypedRowBuilder.new
-    elsif row_builder == :read
+    elsif build_arg == :read
       TypedRowBuilder.new(ReadOnlyRow)
-    elsif row_builder == :hash
+    elsif build_arg == :hash
       TypedRowBuilder.new(HashRow)
-    elsif row_builder == :write
+    elsif build_arg == :write
       TypedRowBuilder.new(WritableRow)
-    elsif row_builder == :smart
+    elsif build_arg == :smart
       TypedRowBuilder.new(SmartRow)
-    elsif row_builder.respond_to?('build_rows')
-      row_builder
+    elsif build_arg.respond_to?('build_rows')
+      build_arg
     else
-      TypedRowBuilder.new(row_builder)
+      TypedRowBuilder.new(build_arg)
     end
   end
 
