@@ -1,10 +1,17 @@
 require 'dohmysql/readonly_row'
+require 'dohmysql/smart_row'
 
 module DohDb
 
 class TypedRowBuilder
   def initialize(arg = ReadOnlyRow)
-    @row_klass = arg
+    if arg.is_a?(String)
+      @row_klass = SmartRow
+      @table = arg
+    else
+      @row_klass = arg
+      @table = nil
+    end
   end
 
   def build_rows(result_set)
@@ -22,7 +29,12 @@ class TypedRowBuilder
           values.push(value)
         end
       end
-      retval.push(@row_klass.new(keys, values))
+      if @table
+        row = @row_klass.new(keys, values, @table)
+      else
+        row = @row_klass.new(keys, values)
+      end
+      retval.push(row)
     end
     retval
   end
