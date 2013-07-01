@@ -1,4 +1,5 @@
 require 'dohmysql/abstract_row'
+require 'sqlstmt/update'
 
 module DohDb
 
@@ -65,6 +66,19 @@ class AbstractSmartRow < AbstractRow
 
   def guess_missing_set(key, value)
     set(key, value)
+  end
+
+  def db_update
+    return if @changed_keys.empty?
+    sqlb = SqlStmt::Update.new.table(@table)
+    sqlb.where("#{primary_key} = #{get(primary_key).to_sql}")
+    @changed_keys.each {|key| sqlb.field(key, get(key).to_sql)}
+    Doh.db.query(sqlb)
+    @changed_keys.clear
+  end
+
+  def primary_key
+    @primary_key ||= "#{@table}_id"
   end
 end
 
