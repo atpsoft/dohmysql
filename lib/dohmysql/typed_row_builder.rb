@@ -3,8 +3,8 @@ require 'dohmysql/readonly_row'
 module DohDb
 
 class TypedRowBuilder
-  def initialize(row_klass = nil)
-    @row_klass = row_klass || ReadOnlyRow
+  def initialize(arg = ReadOnlyRow)
+    @row_klass = arg
   end
 
   def build_rows(result_set)
