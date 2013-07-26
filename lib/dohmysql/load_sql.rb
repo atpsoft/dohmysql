@@ -37,18 +37,21 @@ def self.load_sql(dbconfig, filenames)
   end
 end
 
-# trying Open3 now for better error handling; unknown as of yet if this works under JRuby
 def self.load_sql_using_each_open3(dbconfig, filenames)
   dohlog.debug("loading sql file: " + filenames.first) if filenames.size == 1
 
   basecmd = 'mysql' + mysql_arg(dbconfig[:host], 'h') + mysql_arg(dbconfig[:username], 'u') + mysql_arg(dbconfig[:password], 'p') + ' ' + dbconfig[:database] + ' < '
   filenames.each do |elem|
     mysqlcmd = "#{basecmd} #{elem}"
-    stdin, stdout, stderr = Open3.popen3(mysqlcmd)
-    stdoutstr = stdout.read
-    stdout.close
-    stderrstr = stderr.read
-    raise "#{stderrstr} occured while loading file: #{elem}" if !stderrstr.empty?
+    Open3.popen3(mysqlcmd) do |stdin, stdout, stderr, wait_thr|
+      # don't care about any stdout
+      stdout.read
+      errstr = stderr.read.strip
+      errstr = '' if errstr == 'Warning: Using a password on the command line interface can be insecure.'
+      status = wait_thr.value.exitstatus
+      raise "mysql had stderr #{errstr}" unless errstr.empty?
+      raise "mysql command failed with exit code #{status}" unless status == 0
+    end
   end
 end
 
