@@ -4,7 +4,6 @@ require 'sqlstmt/update'
 module DohDb
 
 class AbstractSmartRow < AbstractRow
-  attr_accessor :table
   attr_reader :changed_keys
 
   def initialize(keys, values)

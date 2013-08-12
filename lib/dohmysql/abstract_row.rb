@@ -3,7 +3,7 @@ require 'dohutil/core_ext/force_deep_copy'
 module DohDb
 
 class AbstractRow
-  attr_accessor :keys, :values
+  attr_accessor :keys, :values, :table
   force_deep_copy :keys, :values
 
   def at(index)
