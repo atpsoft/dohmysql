@@ -8,6 +8,9 @@ class TypedRowBuilder
     if arg.is_a?(String)
       @row_klass = SmartRow
       @table = arg
+    elsif arg.is_a?(Hash)
+      @row_klass = ReadOnlyRow
+      @table = arg[:read]
     else
       @row_klass = arg
       @table = nil
