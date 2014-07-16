@@ -1,6 +1,8 @@
 DohMysql
 ========
 
+This gem is not currently under active development.  It will be reborn at a later time.
+
 [![Build Status](https://travis-ci.org/atpsoft/dohmysql.png)](https://travis-ci.org/atpsoft/dohmysql)
 [![Code Climate](https://codeclimate.com/github/atpsoft/dohmysql.png)](https://codeclimate.com/github/atpsoft/dohmysql)
 
